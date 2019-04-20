@@ -28,8 +28,7 @@ module icosahedron(a = 2) {
 }
 
 // This module arranges the numbers so that they align with the top of the dice box.
-module top_die_counter(a = 2) {
-    chars = [ "18", "17", "16", "20", "19" ];
+module top_die_with_chars(a = 50, chars) {
     
     for(idx = [0:4]) {
         rotate([90, 180, 90 - (idx * 72.5)])
@@ -42,10 +41,7 @@ module top_die_counter(a = 2) {
 
 // This module arranges the numbers so that they align with the bottom of the dice box.
 // There are 3 rows, the first row and the third row are upside down (by design).s
-module bottom_die_counter(a = 2) {
-    row_1_chars = [ ".9", "7", "15", "13", "11" ];
-    row_2_chars = [ "14", "12", "10", "8", "6." ];
-    row_3_chars = [ "4", "3", "2", "1", "5" ];
+module bottom_die_counter(a = 50, row_1_chars, row_2_chars, row_3_chars) {
     
     // First Row
     for(idx = [0:4]) {
@@ -99,7 +95,7 @@ module bottom_icosahedron(a = 2) {
 // 2. Etch (difference) the numbers around the die
 // 3. Add the magnet pocket supports
 // 4. Carve out the magnet pockets (for 10mm magnets)
-module d20_top(a = 50) {
+module d20_top(a = 50, chars) {
     translations = [ 
         [-1.23 * a, 0, -0.85 * a],
         [-0.4 * a, 1.2 * a, -0.85 * a],
@@ -118,7 +114,7 @@ module d20_top(a = 50) {
                     top_icosahedron(a-4);
                 }
                 // 2. Etch out the numbers:
-                top_die_counter(a);
+                top_die_with_chars(a, chars);
             }
             
             // 3. Add the magnet pocket supports:
@@ -154,7 +150,7 @@ module magnet_pocket() {
 // 2. Etch (difference) the numbers around the die
 // 3. Add the magnet pocket supports
 // 4. Carve out the magnet pockets (for 10mm magnets)
-module d20_bottom(a = 50) {
+module d20_bottom(a = 50, row_1_chars, row_2_chars, row_3_chars) {
     translations = [ 
         [-1.23 * a, 0, -0.85 * a],
         [-0.4 * a, 1.2 * a, -0.85 * a],
@@ -174,7 +170,7 @@ module d20_bottom(a = 50) {
                     bottom_icosahedron(a-4);
                 }
                 // 2. Etch out the numbers:
-                bottom_die_counter(a);
+                bottom_die_counter(a, row_1_chars, row_2_chars, row_3_chars);
             }      
           
             // 3. Add the magnet pocket supports:
@@ -199,12 +195,53 @@ module magnet_pocket_support_bottom(a = 50) {
    cylinder(d1 = 4*a/6+1, d2 = 5*a/8, a/5);
 }
 
-// Displays the top and bottom with a bit of space between them so that you can see how they fit together
-module display(a = 50) {
+// Displays the top and bottom of the dice box (counter) with a bit of space between them so you can
+// see how they fit together.
+module display_counter(a = 50) {
     translate([0, 0, -20])
-    d20_top(a);
+    d20_counter_top(a);
     translate([0, 0, 20])
-    d20_bottom(a);
+    d20_counter_bottom(a);
+}
+
+// Creates the top of the dice box as a counter:
+module d20_counter_top(a = 50) {
+    counter_chars = [ "18", "17", "16", "20", "19" ];
+    d20_top(a, counter_chars);
+}
+
+// Creates the bottom of the dice box as a counter:
+module d20_counter_bottom(a = 50) {
+    row_1_chars = [ ".9", "7", "15", "13", "11" ];
+    row_2_chars = [ "14", "12", "10", "8", "6." ];
+    row_3_chars = [ "4", "3", "2", "1", "5" ];
+    
+    d20_bottom(a, row_1_chars, row_2_chars, row_3_chars);
+}
+
+
+// Displays the top and bottom of the dice box (roller) with a bit of space between them so you can
+// see how they fit together.
+module display_roller(a = 50) {
+    translate([0, 0, -20])
+    d20_roller_top(a);
+    translate([0, 0, 20])
+    d20_roller_bottom(a);
+}
+
+// Creates the top of the dice box as a roller:
+module d20_roller_top(a = 50) {
+    roller_chars = [ "4", "18", "2", "20", "14" ];
+    d20_top(a, roller_chars);
+}
+
+// Creates the bottom of the dice box as a roller:
+module d20_roller_bottom(a = 50) {
+    row_1_chars = [ "11", "5", "12", "8", "6." ];
+    row_2_chars = [ "10", "16", "9.", "13", "15" ];
+    row_3_chars = [ "17", "3", "19", "1", "7" ];
+    
+    d20_bottom(a, row_1_chars, row_2_chars, row_3_chars);
 }
 
 module main() {
@@ -214,15 +251,18 @@ module main() {
     // bottom = 136mm x 129mm x 110 mm
     a = 40;
     
-    // Do you want to see the top and bottom at the same time?
-    display(a);
+    // Display the full die (roller or counter):
+    display_roller(a);
+    // display_counter(a);
     
-    // Uncomment the next 2 lines to render the top of the box:
+    // Uncomment the next 2 lines to render the top of the box (choose roller or counter):
     // rotate([0, 180, 0])
-    // d20_top(a);
+    // d20_roller_top(a);
+    // d20_counter_top(a);
     
     // Uncomment the next line to render the bottom of the box:
-    // d20_bottom(a);
+    // d20_roller_bottom(a);
+    // d20_counter_bottom(a);
 }
 
 

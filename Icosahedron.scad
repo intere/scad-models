@@ -1,5 +1,6 @@
 /*****************************************************************
-* Twenty Sided Die box, based on the model:
+* Twenty Sided Die box, based on the Icosahedron model: by
+* Adam Anderson.
 *************************************************************/
 
 /*****************************************************************
@@ -73,10 +74,7 @@ module bottom_die_counter(a = 2) {
     
 }
 
-module top_die_roller(a = 2) {
-    chars = ["20", "2", "12", "10", "8" ];
-}
-
+// Slices the icosahedron to carve out the top of the dice box
 module top_icosahedron(a = 2) {
     intersection() {
         rotate([0, 32, 0]) icosahedron(a);
@@ -85,6 +83,7 @@ module top_icosahedron(a = 2) {
     }
 }
 
+// Slices the icosahedron to carve out the bottom of the dice box
 module bottom_icosahedron(a = 2) {
     intersection() {
         rotate([0, 32, 0]) icosahedron(a);
@@ -93,7 +92,10 @@ module bottom_icosahedron(a = 2) {
     }
 }
 
-// Creates a nice, thick icosahedron (top section) and then does a diff of the numbers to etch them out.
+// Creates the top of the dice box by doing the following:
+// 1. Render the top portion of the icosahedron
+// 2. Etch (difference) the numbers around the die
+// 3. Add the magnet pockets (for 10mm magnets)
 module d20_top(a = 50) {
     union() {
         difference() {
@@ -103,28 +105,41 @@ module d20_top(a = 50) {
             }
             top_die_counter(a);
         }
-        translate([-1.23 * a, 0, -0.91 * a])
-        magnet_pocket(a);
+        translate([-1.23 * a, 0, -0.85 * a])
+        magnet_pocket_top(a);
         
-        translate([-0.4 * a, 1.2 * a, -0.91 * a])
+        translate([-0.4 * a, 1.2 * a, -0.85 * a])
         rotate([0, 0, -75])
-        magnet_pocket(a);
+        magnet_pocket_top(a);
         
-        translate([-0.4 * a, -1.2 * a, -0.91 * a])
+        translate([-0.4 * a, -1.2 * a, -0.85 * a])
         rotate([0, 0, 75])
-        magnet_pocket(a);
+        magnet_pocket_top(a);
         
-        translate([a, 0.75 * a, -0.91 * a])
+        translate([a, 0.75 * a, -0.85 * a])
         rotate([0, 0, -140])
-        magnet_pocket(a);
+        magnet_pocket_top(a);
         
-        translate([a, -0.75 * a, -0.91 * a])
+        translate([a, -0.75 * a, -0.85 * a])
         rotate([0, 0, -230])
-        magnet_pocket(a);
+        magnet_pocket_top(a);
     }
 }
 
-// Creates a nice, thick icosahedron and then does a diff of the numbers to etch them out.
+// A Module that creates a "magnet pocket" for the top of the dice box.
+module magnet_pocket_top(a = 50) {
+    
+    rotate([180, 0, 0])
+    difference() {
+        cylinder(d1 = a/2, d2 = 2, a/5);
+        cylinder(d=11, d=11, 3);
+    }
+}
+
+// Creates the bottom of the dice box by doing the following:
+// 1. Render the bottom portion of the icosahedron
+// 2. Etch (difference) the numbers around the die
+// 3. Add the magnet pockets (for 10mm magnets)
 module d20_bottom(a = 50) {
     union() {
         difference() {
@@ -136,75 +151,59 @@ module d20_bottom(a = 50) {
             bottom_die_counter(a);
         }        
 
-        translate([-1.23 * a, 0, -0.79 * a])
+        translate([-1.23 * a, 0, -0.85 * a])
         magnet_pocket_bottom(a);
         
-        translate([-0.4 * a, 1.2 * a, -0.79 * a])
+        translate([-0.4 * a, 1.2 * a, -0.85 * a])
         rotate([0, 0, -75])
         magnet_pocket_bottom(a);
         
-        translate([-0.4 * a, -1.2 * a, -0.79 * a])
+        translate([-0.4 * a, -1.2 * a, -0.85 * a])
         rotate([0, 0, 75])
         magnet_pocket_bottom(a);
         
-        translate([a, 0.75 * a, -0.79 * a])
+        translate([a, 0.75 * a, -0.85 * a])
         rotate([0, 0, -140])
         magnet_pocket_bottom(a);
         
-        translate([a, -0.75 * a, -0.79 * a])
+        translate([a, -0.75 * a, -0.85 * a])
         rotate([0, 0, -230])
         magnet_pocket_bottom(a);
     }
 }
 
-// A Module that creates a "magnet pocket"
-module magnet_pocket(a = 50) {
-    
+// The "magnet pockets" for the bottom of the dice box
+module magnet_pocket_bottom(a = 50) {
     difference() {
-        scale([1.3, 1.36, 1])
-        cube([a/3, a/3, 6], center = true);
-        cylinder(3, 5.5, 5.5);
-        
-        scale([1.3, 1.36, 1])
-        translate([-a/6, -a/6, -4])
-        cylinder(7, a/4);
-        
-        scale([1.3, 1.36, 1])
-        translate([-a/6, a/6, -4])
-        cylinder(7, a/4);
+        cylinder(d1 = 4*a/6+1, d2 = 5*a/8, a/5);
+        cylinder(d=11, d=11, 3);
     }
 }
 
-module magnet_pocket_bottom(a = 50) {    
-    rotate([180, 0, 0])
-    difference() {
-        scale([1.3, 1.36, 1])
-        union() {
-            cube([a/3, a/3, 6], center = true);
-            translate([-a/7, 0, 0])
-            cube([a/3, a/3, 6], center = true);
-        }
-        cylinder(3, 5.5, 5.5);
-        
-        scale([1.3, 1.36, 1])
-        translate([-a/3, -a/6, -4])
-        cylinder(15, a/4);
-        
-        scale([1.3, 1.36, 1])
-        translate([-a/3, a/6, -4])
-        cylinder(15, a/4);
-    }
+// Displays the top and bottom with a bit of space between them so that you can see how they fit together
+module display(a = 50) {
+    translate([0, 0, -20])
+    d20_top(a);
+    translate([0, 0, 20])
+    d20_bottom(a);
 }
 
 module main() {
     
-    translate([0, 0, -20])
-    d20_top();
-    translate([0, 0, 20])
-    d20_bottom();
-    //magnet_pocket();
-        
-    //magnet_pocket_bottom();
+    // I've determined this to be the approrpiate size:
+    // top = 122mm x 129mm x 42 mm (approx)
+    // bottom = 136mm x 129mm x 110 mm
+    a = 40;
+    
+    // Do you want to see the top and bottom at the same time?
+    display(a);
+    
+    // Uncomment the next 2 lines to render the top of the box:
+    // rotate([0, 180, 0])
+    //d20_top(a);
+    
+    // Uncomment the next line to render the bottom of the box:
+    // d20_bottom(a);
 }
 
 

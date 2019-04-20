@@ -97,65 +97,54 @@ module bottom_icosahedron(a = 2) {
 // Creates the top of the dice box by doing the following:
 // 1. Render the top portion of the icosahedron
 // 2. Etch (difference) the numbers around the die
-// 3. Add the magnet pockets (for 10mm magnets)
+// 3. Add the magnet pocket supports
+// 4. Carve out the magnet pockets (for 10mm magnets)
 module d20_top(a = 50) {
+    translations = [ 
+        [-1.23 * a, 0, -0.85 * a],
+        [-0.4 * a, 1.2 * a, -0.85 * a],
+        [-0.4 * a, -1.2 * a, -0.85 * a],
+        [a, 0.75 * a, -0.85 * a],
+        [a, -0.75 * a, -0.85 * a]
+    ];
+    z_rotations = [ 0, -75, 75, -140, -230 ];
+    
     difference() {
         union() {
             difference() {
+                // 1. Carve a smaller icosahedron out of the larger one (to make it a box):
                 difference() {
                     top_icosahedron(a);
                     top_icosahedron(a-4);
                 }
+                // 2. Etch out the numbers:
                 top_die_counter(a);
             }
-            translate([-1.23 * a, 0, -0.85 * a])
-            magnet_pocket_top(a);
             
-            translate([-0.4 * a, 1.2 * a, -0.85 * a])
-            rotate([0, 0, -75])
-            magnet_pocket_top(a);
-            
-            translate([-0.4 * a, -1.2 * a, -0.85 * a])
-            rotate([0, 0, 75])
-            magnet_pocket_top(a);
-            
-            translate([a, 0.75 * a, -0.85 * a])
-            rotate([0, 0, -140])
-            magnet_pocket_top(a);
-            
-            translate([a, -0.75 * a, -0.85 * a])
-            rotate([0, 0, -230])
-            magnet_pocket_top(a);
+            // 3. Add the magnet pocket supports:
+            for(index = [0:4]) {
+                translate(translations[index])
+                rotate([0, 0, z_rotations[index]])
+                magnet_pocket_support_top(a);
+            }
         }
         
-        // The Magnet Pockets:
-        translate([-1.23 * a, 0, -0.85 * a])
-        magnet_pocket();
-        
-        translate([-0.4 * a, 1.2 * a, -0.85 * a])
-        rotate([0, 0, -75])
-        magnet_pocket();
-        
-        translate([-0.4 * a, -1.2 * a, -0.85 * a])
-        rotate([0, 0, 75])
-        magnet_pocket();
-        
-        translate([a, 0.75 * a, -0.85 * a])
-        rotate([0, 0, -140])
-        magnet_pocket();
-        
-        translate([a, -0.75 * a, -0.85 * a])
-        rotate([0, 0, -230])
-        magnet_pocket();
+        // 4. Carve out the magnet pockets:
+        for(index = [0:4]) {
+            translate(translations[index])
+            rotate([0, 0, z_rotations[index]])
+            magnet_pocket(a);
+        }
     }
 }
 
 // A Module that creates a "magnet pocket" for the top of the dice box.
-module magnet_pocket_top(a = 50) {
+module magnet_pocket_support_top(a = 50) {
     rotate([180, 0, 0])
     cylinder(d1 = a/2, d2 = 2, a/5);
 }
 
+// A module that builds the magnet pockets
 module magnet_pocket() {
     cylinder(d=11, d=11, 3);
 }
@@ -163,58 +152,45 @@ module magnet_pocket() {
 // Creates the bottom of the dice box by doing the following:
 // 1. Render the bottom portion of the icosahedron
 // 2. Etch (difference) the numbers around the die
-// 3. Add the magnet pockets (for 10mm magnets)
+// 3. Add the magnet pocket supports
+// 4. Carve out the magnet pockets (for 10mm magnets)
 module d20_bottom(a = 50) {
+    translations = [ 
+        [-1.23 * a, 0, -0.85 * a],
+        [-0.4 * a, 1.2 * a, -0.85 * a],
+        [-0.4 * a, -1.2 * a, -0.85 * a],
+        [a, 0.75 * a, -0.85 * a],
+        [a, -0.75 * a, -0.85 * a]
+    ];
+    z_rotations = [ 0, -75, 75, -140, -230 ];
+    
     difference() {
         union() {
             difference() {
+                // 1. Carve a smaller icosahedron out of the larger one (to make it a box):
                 difference() {
                     bottom_icosahedron(a);
                     translate([0, 0, -4])
                     bottom_icosahedron(a-4);
                 }
+                // 2. Etch out the numbers:
                 bottom_die_counter(a);
-            }        
-
-            translate([-1.23 * a, 0, -0.85 * a])
-            magnet_pocket_support_bottom(a);
-            
-            translate([-0.4 * a, 1.2 * a, -0.85 * a])
-            rotate([0, 0, -75])
-            magnet_pocket_support_bottom(a);
-            
-            translate([-0.4 * a, -1.2 * a, -0.85 * a])
-            rotate([0, 0, 75])
-            magnet_pocket_support_bottom(a);
-            
-            translate([a, 0.75 * a, -0.85 * a])
-            rotate([0, 0, -140])
-            magnet_pocket_support_bottom(a);
-            
-            translate([a, -0.75 * a, -0.85 * a])
-            rotate([0, 0, -230])
-            magnet_pocket_support_bottom(a);
+            }      
+          
+            // 3. Add the magnet pocket supports:
+            for(index = [0:4]) {
+                translate(translations[index])
+                rotate([0, 0, z_rotations[index]])
+                magnet_pocket_support_bottom(a);
+            }
         }
         
-        // Magnet Pockets
-        translate([-1.23 * a, 0, -0.85 * a])
-        magnet_pocket();
-        
-        translate([-0.4 * a, 1.2 * a, -0.85 * a])
-        rotate([0, 0, -75])
-        magnet_pocket();
-        
-        translate([-0.4 * a, -1.2 * a, -0.85 * a])
-        rotate([0, 0, 75])
-        magnet_pocket();
-        
-        translate([a, 0.75 * a, -0.85 * a])
-        rotate([0, 0, -140])
-        magnet_pocket();
-        
-        translate([a, -0.75 * a, -0.85 * a])
-        rotate([0, 0, -230])
-        magnet_pocket();
+        // 4. Carve out the magnet pockets:
+        for(index = [0:4]) {
+            translate(translations[index])
+            rotate([0, 0, z_rotations[index]])
+            magnet_pocket(a);
+        }
     }
 }
 

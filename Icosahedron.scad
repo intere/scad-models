@@ -142,6 +142,7 @@ module magnet_pocket_support_top(a = 50) {
 
 // A module that builds the magnet pockets
 module magnet_pocket() {
+    translate([0, 0, -3])
     cylinder(d=11, d=11, 3);
 }
 
@@ -252,7 +253,7 @@ module main() {
     a = 40;
     
     // Display the full die (roller or counter):
-    display_roller(a);
+    // display_roller(a);
     // display_counter(a);
     
     // Uncomment the next 2 lines to render the top of the box (choose roller or counter):
@@ -262,7 +263,8 @@ module main() {
     
     // Uncomment the next line to render the bottom of the box:
     // d20_roller_bottom(a);
-    // d20_counter_bottom(a);
+    d20_counter_bottom(a);   
+    
 }
 
 

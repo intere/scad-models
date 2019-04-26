@@ -186,6 +186,7 @@ module d20_bottom(a = 50, row_1_chars, row_2_chars, row_3_chars) {
         for(index = [0:4]) {
             translate(translations[index])
             rotate([0, 0, z_rotations[index]])
+            translate([0, 0, 2.99])
             magnet_pocket(a);
         }
     }
@@ -264,6 +265,7 @@ module main() {
     // Uncomment the next line to render the bottom of the box:
     // d20_roller_bottom(a);
     d20_counter_bottom(a);   
+    
     
 }
 

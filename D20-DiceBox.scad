@@ -253,9 +253,9 @@ module main() {
     // bottom = 136mm x 129mm x 110 mm
     a = 40;
     
-    // Display the full die (roller or counter):
+    // The next two lines will display the full die (roller or counter):
     // display_roller(a);
-    // display_counter(a);
+    display_counter(a);
     
     // Uncomment one of the next 2 lines to render the top of the box (choose roller or counter):
     // rotate([0, 180, 0]) d20_roller_top(a);

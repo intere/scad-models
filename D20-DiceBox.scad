@@ -257,14 +257,13 @@ module main() {
     // display_roller(a);
     // display_counter(a);
     
-    // Uncomment the next 2 lines to render the top of the box (choose roller or counter):
-    // rotate([0, 180, 0])
-    // d20_roller_top(a);
-    // d20_counter_top(a);
+    // Uncomment one of the next 2 lines to render the top of the box (choose roller or counter):
+    // rotate([0, 180, 0]) d20_roller_top(a);
+    // rotate([0, 180, 0]) d20_counter_top(a);
     
-    // Uncomment the next line to render the bottom of the box:
+    // Uncomment one of the next two line to render the bottom of the box:
     // d20_roller_bottom(a);
-    d20_counter_bottom(a);   
+    // d20_counter_bottom(a);
     
     
 }
